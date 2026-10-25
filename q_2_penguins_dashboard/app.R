@@ -33,6 +33,14 @@ ui <- fluidPage(
                         multiple = TRUE,
                         selected = unique(penguins$species)
             ),
+            radioButtons("x",
+                        "Select x:",
+                        choices = c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"),
+                        selected = "bill_length_mm"),
+            radioButtons("y",
+                         "Select y:",
+                         choices = c("bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"),
+                         selected = "bill_depth_mm"),
             actionButton("reset",
                          "Reset settings")
         ),
@@ -51,6 +59,8 @@ server <- function(input, output, session) {
     observeEvent(input$reset, {
       updateCheckboxGroupInput(session, "sex", selected = c("male", "female"))
       updateSelectInput(session, "species", selected = unique(penguins$species))
+      updateRadioButtons(session, "x", selected = "bill_length_mm")
+      updateRadioButtons(session, "y", selected = "bill_depth_mm")
     })
   
     output$distPlot <- renderPlot({
