@@ -79,6 +79,14 @@ server <- function(input, output, session) {
                 "Please select at least one species."
             )
         )
+        
+        # Validate that x and y are different
+        validate(
+            need(
+                input$x != input$y,
+                "Variable x and variable y must be different."
+            )
+        )
       
         # Initialize
         penguins_filtered <- penguins
