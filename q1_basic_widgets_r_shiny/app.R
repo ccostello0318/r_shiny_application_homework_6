@@ -99,7 +99,6 @@ server <- function(input, output, session) {
       updateCheckboxInput(session, "color", value = FALSE)
       updateRadioButtons(session, "plot_type",
                          selected = "Histogram")
-      updateNumericInput(session, "min_wait", value = 40)
     })
     
     # Check and switch to dark/light mode
