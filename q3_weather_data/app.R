@@ -42,6 +42,20 @@ ui <- fluidPage(
             actionButton(
                 "reset",
                 "Reset settings"
+            ),
+        
+            tags$hr(),
+            
+            wellPanel(
+                h4("Anomoly In Data"),
+                p("There appears to be a weather anomoly in the Orchard data set.
+                  Click the button below to view this potential irregularity."),
+                actionButton(
+                    "anomoly",
+                    "View Anomoly",
+                      class = "btn-info",
+                      width = "100%"
+                )
             )
         ),
 
@@ -99,6 +113,13 @@ server <- function(input, output, session) {
             max = station_max,
             value = c(new_start, new_end)
         )
+    })
+    
+    # View anomoly
+    
+    observeEvent(input$anomoly, {
+        updateSliderInput(session, "dateRange", value = c(as.Date("2015-11-21"), as.Date("2015-11-28")))
+        updateRadioButtons(session, "station", selected = "Orchard")
     })
     
     output$distPlot <- renderPlot({
