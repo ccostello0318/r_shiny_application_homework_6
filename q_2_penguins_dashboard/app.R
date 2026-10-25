@@ -22,11 +22,17 @@ ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
             checkboxGroupInput("sex",
-                         "Peginuin Sex:",
-                          choices = c("male", "female"),
-                          selected = "male"
+                              "Penguin Sex:",
+                               choices = c("male", "female"),
+                               selected = c("male", "female")
             
-          )
+            ),
+            selectInput("species",
+                        "Penguin Species:",
+                        choices = unique(penguins$species),
+                        multiple = TRUE,
+                        selected = unique(penguins$species)
+            )
         ),
 
         # Show a plot of the generated distribution
@@ -42,10 +48,18 @@ server <- function(input, output, session) {
     output$distPlot <- renderPlot({
         # Validate that a gender is selected.
         validate(
-          need(
-            length(input$sex) > 0,
-            "Please select at least one sex."
-          )
+            need(
+                length(input$sex) > 0,
+                "Please select at least one sex."
+            )
+        )
+      
+        # Validate that a species is selected.
+        validate(
+            need(
+                length(input$species) > 0,
+                "Please select at least one species."
+            )
         )
       
         # Initialize
@@ -53,9 +67,12 @@ server <- function(input, output, session) {
         
         # Filter sex, if sex argument > 1, don't filter (NA values for sex included)
         if (length(input$sex) == 1) {
-          penguins_filtered <- penguins_filtered |>
-            filter(sex == input$sex)
+            penguins_filtered <- penguins_filtered |>
+                filter(sex == input$sex)
         }
+        # Filter species
+        penguins_filtered <- penguins_filtered |>
+            filter(species == input$species)
         
         ggplot(penguins_filtered,
             aes(x = flipper_length_mm)) +
