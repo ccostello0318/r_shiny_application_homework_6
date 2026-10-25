@@ -57,10 +57,10 @@ server <- function(input, output, session) {
 
     # Reset the inputs
     observeEvent(input$reset, {
-      updateCheckboxGroupInput(session, "sex", selected = c("male", "female"))
-      updateSelectInput(session, "species", selected = unique(penguins$species))
-      updateRadioButtons(session, "x", selected = "bill_length_mm")
-      updateRadioButtons(session, "y", selected = "bill_depth_mm")
+        updateCheckboxGroupInput(session, "sex", selected = c("male", "female"))
+        updateSelectInput(session, "species", selected = unique(penguins$species))
+        updateRadioButtons(session, "x", selected = "bill_length_mm")
+        updateRadioButtons(session, "y", selected = "bill_depth_mm")
     })
   
     output$distPlot <- renderPlot({
@@ -89,7 +89,8 @@ server <- function(input, output, session) {
         )
       
         # Initialize
-        penguins_filtered <- penguins
+        penguins_filtered <- penguins |>
+            mutate(sex = if_else(is.na(sex), "unknown", sex))
         
         # Filter sex, if sex argument > 1, don't filter (NA values for sex included)
         if (length(input$sex) == 1) {
@@ -100,9 +101,13 @@ server <- function(input, output, session) {
         penguins_filtered <- penguins_filtered |>
             filter(species == input$species)
         
+        
+        
         ggplot(penguins_filtered,
-            aes(x = flipper_length_mm)) +
-            geom_histogram()
+            aes(x = .data[[input$x]], y = .data[[input$y]], color = species, shape = sex)) +
+            geom_point() +
+            labs(title = "Scatterplot of Penguin Characterics") +
+            theme_minimal()
     })
 }
 
