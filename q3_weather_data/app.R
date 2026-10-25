@@ -14,7 +14,7 @@ library(macleish)
 ui <- fluidPage(
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
+    titlePanel("Weather Time Series Data"),
 
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
@@ -51,12 +51,31 @@ server <- function(input, output, session) {
 
     # Reset the inputs
     observeEvent(input$reset, {
-      updateSliderInput(session, "dateRange", value = c(as.Date(min(whately_2015$when)), as.Date(max(whately_2015$when))))
-      updateRadioButtons(session, "station", selected = "Whately")
+        updateSliderInput(session, "dateRange", value = c(as.Date(min(whately_2015$when)), as.Date(max(whately_2015$when))))
+        updateRadioButtons(session, "station", selected = "Whately")
     })    
     
     output$distPlot <- renderPlot({
-
+      
+        # Filter station
+        station_data <- if (input$station == "Whately") {
+            whately_2015
+        } else {
+            orchard_2015
+        }
+        
+        # Filter to dates
+        station_data |> filter(when >= input$dateRange[1], when <= input$dateRange[2])
+        
+        
+        station_data |> ggplot(aes(x = when, y = temperature)) +
+            geom_line(size = 0.5) +
+            coord_cartesian(
+                xlim = as.POSIXct(
+                    c(input$dateRange[1], input$dateRange[2]),
+                    tz = "UTC"
+                )
+            )
     })
 }
 
