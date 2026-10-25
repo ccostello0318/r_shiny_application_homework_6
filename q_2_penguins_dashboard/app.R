@@ -32,7 +32,9 @@ ui <- fluidPage(
                         choices = unique(penguins$species),
                         multiple = TRUE,
                         selected = unique(penguins$species)
-            )
+            ),
+            actionButton("reset",
+                         "Reset settings")
         ),
 
         # Show a plot of the generated distribution
@@ -45,6 +47,12 @@ ui <- fluidPage(
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
 
+    # Reset the inputs
+    observeEvent(input$reset, {
+      updateCheckboxGroupInput(session, "sex", selected = c("male", "female"))
+      updateSelectInput(session, "species", selected = unique(penguins$species))
+    })
+  
     output$distPlot <- renderPlot({
         # Validate that a gender is selected.
         validate(
