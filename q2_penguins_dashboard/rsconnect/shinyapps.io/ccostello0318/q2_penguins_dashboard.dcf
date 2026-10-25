@@ -1,0 +1,12 @@
+name: q2_penguins_dashboard
+title: q2_penguins_dashboard
+username: ccostello0318
+account: ccostello0318
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 18273648
+bundleId: 12737411
+url: https://ccostello0318.shinyapps.io/q2_penguins_dashboard/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE

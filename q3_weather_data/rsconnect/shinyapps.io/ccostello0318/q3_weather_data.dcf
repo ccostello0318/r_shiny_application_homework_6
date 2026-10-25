@@ -1,0 +1,12 @@
+name: q3_weather_data
+title: q3_weather_data
+username: ccostello0318
+account: ccostello0318
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 18273671
+bundleId: 12737456
+url: https://ccostello0318.shinyapps.io/q3_weather_data/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
