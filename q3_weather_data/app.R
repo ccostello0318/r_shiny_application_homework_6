@@ -33,6 +33,12 @@ ui <- fluidPage(
                 choices = c("Whately", "Orchard"),
                 selected = "Whately"
             ),
+            selectInput(
+                "variable",
+                "Select Weather Feature:",
+                choices = c("temperature", "wind_speed", "wind_dir", "rel_humidity", "pressure", "rainfall"),
+                selected = "temperature"
+            ),
             actionButton(
                 "reset",
                 "Reset settings"
@@ -108,7 +114,7 @@ server <- function(input, output, session) {
         station_data |> filter(when >= input$dateRange[1], when <= input$dateRange[2])
         
         
-        station_data |> ggplot(aes(x = when, y = temperature)) +
+        station_data |> ggplot(aes(x = when, y = .data[[input$variable]])) +
             geom_line(size = 0.5) +
             coord_cartesian(
                 xlim = as.POSIXct(
