@@ -9,6 +9,9 @@
 
 library(shiny)
 
+library(palmerpenguins)
+library(tidyverse)
+
 # Define UI for application that draws a histogram
 ui <- fluidPage(
 
@@ -18,11 +21,12 @@ ui <- fluidPage(
     # Sidebar with a slider input for number of bins 
     sidebarLayout(
         sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
+            checkboxGroupInput("sex",
+                         "Peginuin Sex:",
+                          choices = c("male", "female"),
+                          selected = "male"
+            
+          )
         ),
 
         # Show a plot of the generated distribution
@@ -33,17 +37,29 @@ ui <- fluidPage(
 )
 
 # Define server logic required to draw a histogram
-server <- function(input, output) {
+server <- function(input, output, session) {
 
     output$distPlot <- renderPlot({
-        # generate bins based on input$bins from ui.R
-        x    <- faithful[, 2]
-        bins <- seq(min(x), max(x), length.out = input$bins + 1)
-
-        # draw the histogram with the specified number of bins
-        hist(x, breaks = bins, col = 'darkgray', border = 'white',
-             xlab = 'Waiting time to next eruption (in mins)',
-             main = 'Histogram of waiting times')
+        # Validate that a gender is selected.
+        validate(
+          need(
+            length(input$sex) > 0,
+            "Please select at least one sex."
+          )
+        )
+      
+        # Initialize
+        penguins_filtered <- penguins
+        
+        # Filter sex, if sex argument > 1, don't filter (NA values for sex included)
+        if (length(input$sex) == 1) {
+          penguins_filtered <- penguins_filtered |>
+            filter(sex == input$sex)
+        }
+        
+        ggplot(penguins_filtered,
+            aes(x = flipper_length_mm)) +
+            geom_histogram()
     })
 }
 
